@@ -1,6 +1,5 @@
 import { BrApi } from "./BrApiConfig";
 
-
 const getQuoteList = async () => {
     try {
         const { data } = await BrApi().get('quote/list', {
@@ -20,7 +19,6 @@ const getQuoteList = async () => {
         throw error;
     }
 }
-
 
 export const BrApiService = {
     getQuoteList,

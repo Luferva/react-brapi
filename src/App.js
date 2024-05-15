@@ -3,33 +3,27 @@ import './App.css';
 import Card from './components/card';
 import NavBar from './components/navBar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getQuoteList } from './Service/QuoteService';
+
 
 function App() {
 
   //UseState
-  const [quotes, setQuotes] = useState([]);
+  const [quotesData, setQuotes] = useState([]);
 
   //UseEffect
   useEffect(() => {
-    axios.get("https://brapi.dev/api/quote/list", {
-      params: {
-        token: "35TmUkRTDKTCv6xDuhyecq",
-        /* search: "TR",
-        sortBy: "close",
-        sortOrder: "desc", */
-        limit: 30,
-        type: "stock",
+    const fetchQuotes = async () => {
+      try {
+        const quotesData = await getQuoteList();
+        
+        setQuotes(quotesData.stocks);
+      } catch (error) {
+        console.error("Erro durante a requisição:", error);
       }
-    })
-    .then(response => {
-      // Faça algo com os dados recebidos
-      console.log(response.data.stocks);
-      setQuotes(response.data.stocks);
-    })
-    .catch(error => {
-      console.error("Erro durante a requisição:", error);
-    });
+    };
+
+    fetchQuotes();
 
   }, [])
 
@@ -43,7 +37,7 @@ function App() {
 
         <div className='grid grid-cols-6 gap-5'>
           {
-            quotes.map((quote, index) => (
+            quotesData.map((quote, index) => (
               <Card quote={quote} key={index} />
             ))
           }
